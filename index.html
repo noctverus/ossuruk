@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>💨 Osuruk Chaos
+ Of 
+ The Ozon Tabakası</title>
+
+<style>
+:root{--pink:#ff6ec7}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Arial;
+  background:radial-gradient(circle at top,#2b1055,#120018);
+  color:#fff;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+/* 💨 DUMAN */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("https://i.gifer.com/embedded/download/2iiH.gif");
+  background-size:cover;
+  opacity:.12;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* 🌌 KAOS */
+#particles{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+}
+
+.particle{
+  position:absolute;
+  font-size:var(--size);
+  opacity:.95;
+  animation:drift var(--time) linear infinite;
+}
+
+@keyframes drift{
+  from{transform:translate(var(--x1),var(--y1)) rotate(0deg)}
+  to{transform:translate(var(--x2),var(--y2)) rotate(360deg)}
+}
+
+/* UI */
+h1{
+  font-size:28px;
+  margin:6px 0;
+  text-shadow:0 0 18px var(--pink);
+  z-index:2;
+}
+
+#mesaj{
+  min-height:26px;
+  font-weight:700;
+  color:#ffb3c1;
+  text-align:center;
+  z-index:2;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%{opacity:.7}
+  50%{opacity:1}
+  100%{opacity:.7}
+}
+
+/* 📱 ARENA */
+.arena{
+  width:100%;
+  max-width:360px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  z-index:2;
+}
+
+.kart{
+  position:relative;
+  background:rgba(255,255,255,.1);
+  border-radius:22px;
+  padding:18px;
+  text-align:center;
+  backdrop-filter:blur(6px);
+  box-shadow:0 0 25px rgba(255,105,180,.35);
+}
+
+.kart h3{margin:0 0 6px}
+
+.sayac{
+  font-size:34px;
+  font-weight:900;
+}
+
+/* BUTONLAR */
+button{
+  width:100%;
+  margin-top:10px;
+  padding:14px;
+  border:none;
+  border-radius:40px;
+  font-size:18px;
+  font-weight:800;
+  background:linear-gradient(45deg,#ff6ec7,#ffa6e7);
+  color:#2b0033;
+}
+
+/* RESET */
+button.reset{
+  margin-top:8px;
+  padding:10px;
+  font-size:14px;
+  background:rgba(255,255,255,.15);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.3);
+}
+
+/* PATLAMA */
+.gif{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.gif img{width:150px}
+
+/* SHAKE */
+.shake{animation:shake .35s}
+
+@keyframes shake{
+  0%{transform:translate(0)}
+  25%{transform:translate(-10px,5px)}
+  50%{transform:translate(10px,-5px)}
+  75%{transform:translate(-8px,4px)}
+  100%{transform:translate(0)}
+}
+</style>
+
+<!-- 🔥 Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyCcV5kMrjsgJJS3Cod4P-dNMId1-ToDn-4",
+  authDomain:"osuruk-b2ac8.firebaseapp.com",
+  databaseURL:"https://osuruk-b2ac8-default-rtdb.firebaseio.com",
+  projectId:"osuruk-b2ac8"
+});
+const db=firebase.database();
+</script>
+</head>
+
+<body>
+
+<div id="particles"></div>
+
+<h1>💨 Osuruk Chaos
+ Of 
+ The Ozon Tabakası</h1>
+<div id="mesaj">Hazır mısınız?</div>
+
+<div class="arena" id="arena">
+
+  <!-- 👼 TANRIÇA -->
+  <div class="kart">
+    <h3>👼 Tanrıça</h3>
+    💨 <span id="sol" class="sayac">0</span>
+    <button onclick="arttirSol()">OSURDUM</button>
+    <button class="reset" onclick="resetSol()">RESET</button>
+    <div class="gif" id="gifSol"><img src="https://i.gifer.com/6oK.gif"></div>
+  </div>
+
+  <!-- ☢️ ÇERNOBİL -->
+  <div class="kart">
+    <h3>☢️ Ayaklı Çernobil</h3>
+    💨 <span id="sag" class="sayac">0</span>
+    <button onclick="arttirSag()">OSURDUM</button>
+    <button class="reset" onclick="resetSag()">RESET</button>
+    <div class="gif" id="gifSag"><img src="https://i.gifer.com/6oK.gif"></div>
+  </div>
+
+</div>
+
+<audio id="osurukSes">
+  <source src="https://www.myinstants.com/media/sounds/fart-with-reverb.mp3">
+</audio>
+
+<script>
+/* 🌌 KAOS EMOJİ */
+const emojis=["💨","💩","👼","⭐","😈"];
+const box=document.getElementById("particles");
+
+function spawnChaos(n=15){
+  for(let i=0;i<n;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    p.innerText=emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.left=Math.random()*100+"vw";
+    p.style.top=Math.random()*100+"vh";
+    p.style.setProperty("--size",18+Math.random()*22+"px");
+    p.style.setProperty("--time",6+Math.random()*10+"s");
+    p.style.setProperty("--x1","0px");
+    p.style.setProperty("--y1","0px");
+    p.style.setProperty("--x2",(Math.random()*200-100)+"vw");
+    p.style.setProperty("--y2",(Math.random()*-200)+"vh");
+    box.appendChild(p);
+    setTimeout(()=>p.remove(),12000);
+  }
+}
+
+/* OYUN */
+const mesajlar=[
+"💨 Gaz bulutu atmosferi terk etti",
+"💩 Kıyamet kokulu bir hamle",
+"😇 Melekler bile kaçıyor",
+"☢️ Radyasyon seviyesi kritik",
+"😂 Gülmekten nefes alamıyoruz",
+"🤢 Bir daha basmadan düşün",
+"💨 Sessiz ama ölümcül",
+"💩 Bu bilimsel olarak açıklanamaz",
+"😈 Karanlık güçler harekete geçti",
+"🚨 Acil durum! Pencere aç!",
+"😵 Beyin hücreleri hasar aldı",
+"💨 Rüzgar yön değiştirdi",
+"☠️ Doğal silah kullanıldı",
+"🧪 Kimyasal saldırı tespit edildi",
+"😂 Efsanevi bir osuruş",
+"💩 Yer çekimine meydan okudu",
+"😇 Melekler istifa etti",
+"🌪️ Mini kasırga oluştu",
+"💨 Kokusu 3 mahalle öteye gitti",
+"☢️ Çernobil gurur duyuyor",
+"😵 Bilim insanları çaresiz",
+"🤯 Gerçeklik bozuluyor",
+"💩 Ruhsal hasar verildi",
+"😂 Tarihe geçti",
+"💨 Atmosfer delindi"
+];
+
+function efekt(gifId){
+  document.getElementById(gifId).style.display="flex";
+  setTimeout(()=>document.getElementById(gifId).style.display="none",600);
+
+  osurukSes.currentTime=0;
+  osurukSes.play();
+
+  arena.classList.add("shake");
+  setTimeout(()=>arena.classList.remove("shake"),350);
+
+  spawnChaos(18);
+  mesaj.innerText=mesajlar[Math.floor(Math.random()*mesajlar.length)];
+}
+
+db.ref().on("value",s=>{
+  if(!s.val())return;
+  sol.innerText=s.val().sol||0;
+  sag.innerText=s.val().sag||0;
+});
+
+function arttirSol(){
+  db.ref("sol").transaction(v=>(v||0)+1);
+  efekt("gifSol");
+}
+
+function arttirSag(){
+  db.ref("sag").transaction(v=>(v||0)+1);
+  efekt("gifSag");
+}
+
+function resetSol(){
+  db.ref("sol").set(0);
+  mesaj.innerText="👼 Tanrıça arındı";
+}
+
+function resetSag(){
+  db.ref("sag").set(0);
+  mesaj.innerText="☢️ Alan temizlendi";
+}
+
+/* başlangıç kaosu */
+spawnChaos(20);
+</script>
+
+</body>
+</html>
