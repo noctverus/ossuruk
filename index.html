@@ -6,13 +6,16 @@
 <title>💨 Osuruk Chaos Of The Ozon Tabakası</title>
 
 <style>
-:root{--pink:#ff6ec7}
+:root{
+  --pink:#ff6ec7;
+  --purple:#b066ff;
+  --green:#00ff88;
+}
 
-*{box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
-  margin:0;
-  font-family:system-ui,Segoe UI,Arial;
+  font-family:'Segoe UI',system-ui,Arial;
   background:radial-gradient(circle at top,#2b1055,#120018);
   color:#fff;
   min-height:100vh;
@@ -20,73 +23,107 @@ body{
   align-items:center;
   justify-content:center;
   overflow:hidden;
+  position:relative;
 }
 
-/* 🔒 BLUR KATMANI */
+/* 💨 DUMAN ARKA PLAN */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  animation:smoke 20s linear infinite;
+  pointer-events:none;
+  z-index:0;
+}
+
+@keyframes smoke{
+  0%{transform:translateY(0)}
+  100%{transform:translateY(-100px)}
+}
+
+/* 🔒 GİRİŞ EKRANI */
 #lock{
   position:fixed;
   inset:0;
   backdrop-filter:blur(14px);
-  background:rgba(0,0,0,.6);
+  background:rgba(0,0,0,.7);
   z-index:9999;
   display:flex;
   align-items:center;
   justify-content:center;
+  animation:fadeIn 0.3s;
+}
+
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
 }
 
 .lock-box{
-  background:rgba(255,255,255,.1);
-  padding:28px;
+  background:linear-gradient(135deg,rgba(255,110,199,.2),rgba(176,102,255,.2));
+  padding:32px;
   border-radius:24px;
   text-align:center;
-  box-shadow:0 0 40px rgba(255,110,199,.6);
+  box-shadow:0 0 60px rgba(255,110,199,.6),inset 0 0 40px rgba(255,255,255,.1);
+  border:2px solid rgba(255,255,255,.2);
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 60px rgba(255,110,199,.6)}
+  50%{box-shadow:0 0 80px rgba(255,110,199,.9)}
 }
 
 .lock-box h2{
-  margin:0 0 12px;
+  margin:0 0 16px;
   text-shadow:0 0 12px var(--pink);
+  font-size:24px;
 }
 
 .lock-box input{
   width:100%;
   padding:14px;
   border-radius:30px;
-  border:none;
+  border:2px solid rgba(255,110,199,.5);
   font-size:18px;
   text-align:center;
   margin-bottom:12px;
+  background:rgba(255,255,255,.9);
+  transition:all 0.3s;
+}
+
+.lock-box input:focus{
+  outline:none;
+  border-color:var(--pink);
+  box-shadow:0 0 20px rgba(255,110,199,.6);
 }
 
 .lock-box button{
   width:100%;
-  padding:12px;
+  padding:14px;
   border:none;
   border-radius:30px;
-  font-size:16px;
+  font-size:18px;
   font-weight:800;
   background:linear-gradient(45deg,#ff6ec7,#ffa6e7);
   color:#2b0033;
+  cursor:pointer;
+  transition:transform 0.2s;
+}
+
+.lock-box button:hover{
+  transform:scale(1.05);
 }
 
 .lock-error{
   color:#ff9db5;
-  margin-top:8px;
+  margin-top:10px;
   min-height:20px;
+  font-weight:600;
 }
 
-/* 💨 DUMAN */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:url("https://i.gifer.com/embedded/download/2iiH.gif");
-  background-size:cover;
-  opacity:.12;
-  pointer-events:none;
-  z-index:0;
-}
-
-/* 🌌 KAOS */
+/* 🌌 PARTIKÜLLER */
 #particles{
   position:fixed;
   inset:0;
@@ -97,81 +134,255 @@ body::before{
 .particle{
   position:absolute;
   font-size:var(--size);
-  animation:drift var(--time) linear infinite;
+  animation:drift var(--time) ease-out forwards;
+  filter:drop-shadow(0 0 8px rgba(255,110,199,.6));
 }
 
 @keyframes drift{
-  from{transform:translate(0,0) rotate(0deg)}
-  to{transform:translate(var(--x2),var(--y2)) rotate(360deg)}
+  0%{
+    transform:translate(0,0) rotate(0deg);
+    opacity:1;
+  }
+  100%{
+    transform:translate(var(--x2),var(--y2)) rotate(var(--rot));
+    opacity:0;
+  }
 }
 
-/* UI */
-h1{
-  font-size:28px;
-  margin:6px 0;
-  text-shadow:0 0 18px var(--pink);
+/* 🎯 MAIN CONTAINER */
+.container{
+  width:100%;
+  max-width:420px;
+  padding:20px;
   z-index:2;
+  position:relative;
+}
+
+/* 📊 HEADER */
+.header{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+h1{
+  font-size:32px;
+  margin:0 0 8px;
+  text-shadow:0 0 20px var(--pink),0 0 40px var(--purple);
+  background:linear-gradient(45deg,var(--pink),var(--purple),var(--green));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:glow 3s infinite;
+}
+
+@keyframes glow{
+  0%,100%{text-shadow:0 0 20px var(--pink)}
+  50%{text-shadow:0 0 40px var(--purple)}
 }
 
 #mesaj{
-  min-height:26px;
+  min-height:28px;
   font-weight:700;
   color:#ffb3c1;
-  text-align:center;
-  z-index:2;
+  font-size:16px;
+  text-shadow:0 2px 4px rgba(0,0,0,.5);
+  margin-top:8px;
 }
 
+/* 📈 OZON STATUS */
+.ozon-status{
+  background:rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:20px;
+  border:2px solid rgba(255,110,199,.3);
+  text-align:center;
+  backdrop-filter:blur(10px);
+}
+
+.ozon-bar{
+  height:12px;
+  background:rgba(255,255,255,.2);
+  border-radius:20px;
+  overflow:hidden;
+  margin:10px 0;
+}
+
+.ozon-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--green),#ffeb3b,#ff6ec7);
+  border-radius:20px;
+  transition:width 0.5s,background 0.5s;
+  box-shadow:0 0 10px rgba(255,110,199,.8);
+}
+
+.ozon-level{
+  font-weight:800;
+  font-size:14px;
+  color:var(--green);
+  text-shadow:0 0 8px var(--green);
+}
+
+/* 🎴 KARTLAR */
 .arena{
-  width:100%;
-  max-width:360px;
-  padding:12px;
   display:flex;
   flex-direction:column;
-  gap:18px;
-  z-index:2;
+  gap:16px;
 }
 
 .kart{
-  background:rgba(255,255,255,.1);
-  border-radius:22px;
-  padding:18px;
+  background:linear-gradient(135deg,rgba(255,110,199,.15),rgba(176,102,255,.15));
+  border-radius:24px;
+  padding:20px;
   text-align:center;
-  backdrop-filter:blur(6px);
-  box-shadow:0 0 25px rgba(255,105,180,.35);
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 32px rgba(255,105,180,.25);
+  border:2px solid rgba(255,255,255,.15);
+  position:relative;
+  transition:transform 0.3s,box-shadow 0.3s;
 }
 
-.sayac{font-size:34px;font-weight:900}
+.kart:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(255,105,180,.4);
+}
+
+.kart.winner{
+  border-color:var(--green);
+  box-shadow:0 0 40px var(--green);
+}
+
+.kart h3{
+  margin:0 0 12px;
+  font-size:20px;
+  text-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+
+.sayac{
+  font-size:48px;
+  font-weight:900;
+  background:linear-gradient(45deg,#fff,var(--pink));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  display:inline-block;
+  margin-left:8px;
+}
+
+.buttons{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
 
 button{
-  width:100%;
-  margin-top:10px;
+  flex:1;
   padding:14px;
   border:none;
   border-radius:40px;
-  font-size:18px;
+  font-size:16px;
   font-weight:800;
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative;
+  overflow:hidden;
+}
+
+button::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:0;
+  height:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.4);
+  transform:translate(-50%,-50%);
+  transition:width 0.6s,height 0.6s;
+}
+
+button:active::before{
+  width:300px;
+  height:300px;
+}
+
+.btn-osur{
   background:linear-gradient(45deg,#ff6ec7,#ffa6e7);
   color:#2b0033;
+  box-shadow:0 4px 15px rgba(255,110,199,.4);
 }
 
-button.reset{
-  margin-top:8px;
-  padding:10px;
-  font-size:14px;
-  background:rgba(255,255,255,.15);
+.btn-osur:hover{
+  transform:scale(1.05);
+  box-shadow:0 6px 20px rgba(255,110,199,.6);
+}
+
+.btn-osur:active{
+  transform:scale(0.95);
+}
+
+.btn-reset{
+  background:rgba(255,255,255,.12);
   color:#fff;
   border:1px solid rgba(255,255,255,.3);
+  font-size:14px;
+  flex:0.5;
 }
 
-.gif{
+.btn-reset:hover{
+  background:rgba(255,255,255,.2);
+  transform:scale(1.05);
+}
+
+/* 🎆 GIF EXPLOSION */
+.gif-explosion{
   position:absolute;
   inset:0;
   display:none;
   align-items:center;
   justify-content:center;
+  pointer-events:none;
+  z-index:10;
 }
 
-.gif img{width:150px}
+.gif-explosion.active{
+  display:flex;
+  animation:explode 0.6s;
+}
+
+@keyframes explode{
+  0%{transform:scale(0);opacity:0}
+  50%{transform:scale(1.2);opacity:1}
+  100%{transform:scale(1);opacity:0}
+}
+
+.gif-explosion img{
+  width:120px;
+  filter:drop-shadow(0 0 20px var(--pink));
+}
+
+/* 🏆 LIDER ROZETI */
+.crown{
+  position:absolute;
+  top:-12px;
+  right:-12px;
+  font-size:36px;
+  animation:bounce 1s infinite;
+  filter:drop-shadow(0 0 10px gold);
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+
+/* 📱 RESPONSIVE */
+@media(max-width:480px){
+  .container{padding:12px}
+  h1{font-size:24px}
+  .sayac{font-size:36px}
+  .kart{padding:16px}
+}
 </style>
 
 <!-- 🔥 Firebase -->
@@ -195,83 +406,258 @@ const db=firebase.database();
 <div id="lock">
   <div class="lock-box">
     <h2>🔐 Özel Alan</h2>
-    <input id="pass" type="password" placeholder="Şifre">
-    <button onclick="kontrol()">GİR</button>
+    <input id="pass" type="password" placeholder="Şifre giriniz" onkeypress="if(event.key==='Enter')kontrol()">
+    <button onclick="kontrol()">GİRİŞ YAP</button>
     <div class="lock-error" id="lockErr"></div>
   </div>
 </div>
 
 <div id="particles"></div>
 
-<h1>💨 Osuruk Chaos<br>Of<br>The Ozon Tabakası</h1>
-<div id="mesaj">Hazır mısınız?</div>
-
-<div class="arena" id="arena">
-
-  <div class="kart">
-    <h3>👼 Tanrıça</h3>
-    💨 <span id="sol" class="sayac">0</span>
-    <button onclick="arttirSol()">OSURDUM</button>
-    <button class="reset" onclick="resetSol()">RESET</button>
-    <div class="gif" id="gifSol"><img src="https://i.gifer.com/6oK.gif"></div>
+<div class="container">
+  <div class="header">
+    <h1>💨 Osuruk Chaos<br>Of The Ozon Tabakası</h1>
+    <div id="mesaj">Hazır mısınız?</div>
   </div>
 
-  <div class="kart">
-    <h3>☢️ Ayaklı Çernobil</h3>
-    💨 <span id="sag" class="sayac">0</span>
-    <button onclick="arttirSag()">OSURDUM</button>
-    <button class="reset" onclick="resetSag()">RESET</button>
-    <div class="gif" id="gifSag"><img src="https://i.gifer.com/6oK.gif"></div>
+  <div class="ozon-status">
+    <div style="font-size:14px;margin-bottom:8px">🌍 <strong>Ozon Krizi Seviyesi</strong></div>
+    <div class="ozon-bar">
+      <div class="ozon-fill" id="ozonFill"></div>
+    </div>
+    <div class="ozon-level" id="ozonLevel">GÜVEN BÖLGESİ</div>
   </div>
 
+  <div class="arena">
+    <div class="kart" id="kartSol">
+      <h3>👼 Tanrıça</h3>
+      💨 <span id="sol" class="sayac">0</span>
+      <div class="buttons">
+        <button class="btn-osur" onclick="arttirSol()">OSURDUM</button>
+        <button class="btn-reset" onclick="resetSol()">↻</button>
+      </div>
+      <div class="gif-explosion" id="gifSol">
+        <img src="https://media.tenor.com/5Rec-GpCWS8AAAAi/fart-cloud.gif" alt="fart">
+      </div>
+    </div>
+
+    <div class="kart" id="kartSag">
+      <h3>☢️ Ayaklı Çernobil</h3>
+      💨 <span id="sag" class="sayac">0</span>
+      <div class="buttons">
+        <button class="btn-osur" onclick="arttirSag()">OSURDUM</button>
+        <button class="btn-reset" onclick="resetSag()">↻</button>
+      </div>
+      <div class="gif-explosion" id="gifSag">
+        <img src="https://media.tenor.com/5Rec-GpCWS8AAAAi/fart-cloud.gif" alt="fart">
+      </div>
+    </div>
+  </div>
 </div>
 
-<audio id="osurukSes">
-  <source src="https://www.myinstants.com/media/sounds/fart-with-reverb.mp3">
-</audio>
+<!-- 🎵 SES EFEKTLERİ -->
+<audio id="osurukSes1" src="https://www.myinstants.com/media/sounds/fart-with-reverb.mp3"></audio>
+<audio id="osurukSes2" src="https://www.myinstants.com/media/sounds/wet-fart.mp3"></audio>
+<audio id="osurukSes3" src="https://cdn.freesound.org/previews/441/441000_7037-lq.mp3"></audio>
 
 <script>
-/* 🔐 ŞİFRE */
+/* 🔐 ŞİFRE KONTROLÜ */
 function kontrol(){
-  if(document.getElementById("pass").value==="123"){
+  const input=document.getElementById("pass");
+  if(input.value==="123"){
     document.getElementById("lock").style.display="none";
+    spawnChaos(30);
   }else{
-    document.getElementById("lockErr").innerText="❌ Yanlış şifre";
+    const err=document.getElementById("lockErr");
+    err.innerText="❌ Yanlış şifre";
+    input.value="";
+    input.style.animation="shake 0.5s";
+    setTimeout(()=>input.style.animation="",500);
   }
 }
 
-/* 🌌 KAOS */
-const emojis=["💨","💩","👼","⭐","😈"];
+/* 🎵 SES ÇALMA */
+function playSes(){
+  const sesler=[
+    document.getElementById("osurukSes1"),
+    document.getElementById("osurukSes2"),
+    document.getElementById("osurukSes3")
+  ];
+  const ses=sesler[Math.floor(Math.random()*sesler.length)];
+  ses.currentTime=0;
+  ses.volume=0.4;
+  ses.play().catch(()=>{});
+}
+
+/* 🌌 KAOS PARTIKÜLLERI */
+const emojis=["💨","💩","☢️","👼","⭐","😈","💀","🌪️","☁️"];
 const box=document.getElementById("particles");
 
-function spawnChaos(n=15){
+function spawnChaos(n=20){
   for(let i=0;i<n;i++){
     const p=document.createElement("div");
     p.className="particle";
     p.innerText=emojis[Math.floor(Math.random()*emojis.length)];
-    p.style.left=Math.random()*100+"vw";
-    p.style.top=Math.random()*100+"vh";
-    p.style.setProperty("--size",18+Math.random()*22+"px");
-    p.style.setProperty("--time",6+Math.random()*10+"s");
-    p.style.setProperty("--x2",(Math.random()*200-100)+"vw");
-    p.style.setProperty("--y2",(Math.random()*-200)+"vh");
+    
+    const startX=Math.random()*100;
+    const startY=Math.random()*100;
+    p.style.left=startX+"vw";
+    p.style.top=startY+"vh";
+    
+    p.style.setProperty("--size",(20+Math.random()*30)+"px");
+    p.style.setProperty("--time",(3+Math.random()*5)+"s");
+    p.style.setProperty("--x2",(Math.random()*400-200)+"px");
+    p.style.setProperty("--y2",(-200-Math.random()*300)+"px");
+    p.style.setProperty("--rot",(Math.random()*720-360)+"deg");
+    
     box.appendChild(p);
-    setTimeout(()=>p.remove(),12000);
+    setTimeout(()=>p.remove(),8000);
   }
 }
 
-db.ref().on("value",s=>{
-  if(!s.val())return;
-  sol.innerText=s.val().sol||0;
-  sag.innerText=s.val().sag||0;
+/* 🎆 GIF ANİMASYONU */
+function showGif(id){
+  const gif=document.getElementById(id);
+  gif.classList.add("active");
+  setTimeout(()=>gif.classList.remove("active"),600);
+}
+
+/* 📊 OZON STATUS GÜNCELLEME */
+function updateOzon(total){
+  const fill=document.getElementById("ozonFill");
+  const level=document.getElementById("ozonLevel");
+  
+  const percent=Math.min(total*2,100);
+  fill.style.width=percent+"%";
+  
+  if(total<10){
+    level.innerText="GÜVEN BÖLGESİ";
+    level.style.color="var(--green)";
+    fill.style.background="linear-gradient(90deg,var(--green),#00ff88)";
+  }else if(total<25){
+    level.innerText="⚠️ ARTIŞTA";
+    level.style.color="#ffeb3b";
+    fill.style.background="linear-gradient(90deg,var(--green),#ffeb3b)";
+  }else if(total<50){
+    level.innerText="🔥 KRİTİK SEVİYE";
+    level.style.color="#ff9800";
+    fill.style.background="linear-gradient(90deg,#ffeb3b,#ff9800)";
+  }else{
+    level.innerText="💀 OZON YIKIMI";
+    level.style.color="#ff6ec7";
+    fill.style.background="linear-gradient(90deg,#ff9800,#ff6ec7,#b066ff)";
+  }
+}
+
+/* 🏆 LİDER BELİRLEME */
+function updateLeader(solVal,sagVal){
+  const kartSol=document.getElementById("kartSol");
+  const kartSag=document.getElementById("kartSag");
+  
+  kartSol.classList.remove("winner");
+  kartSag.classList.remove("winner");
+  
+  const crownSol=kartSol.querySelector(".crown");
+  const crownSag=kartSag.querySelector(".crown");
+  if(crownSol)crownSol.remove();
+  if(crownSag)crownSag.remove();
+  
+  if(solVal>sagVal&&solVal>0){
+    kartSol.classList.add("winner");
+    const crown=document.createElement("div");
+    crown.className="crown";
+    crown.innerText="👑";
+    kartSol.appendChild(crown);
+  }else if(sagVal>solVal&&sagVal>0){
+    kartSag.classList.add("winner");
+    const crown=document.createElement("div");
+    crown.className="crown";
+    crown.innerText="👑";
+    kartSag.appendChild(crown);
+  }
+}
+
+/* 💬 MESAJ SİSTEMİ */
+const mesajlar={
+  basla:["Hazır mısınız?","Oyun başlasın!","Kim kazanacak?"],
+  dusuk:["Henüz tehlike yok","Ozon tabakası güvende","İyi gidiyorsunuz"],
+  orta:["⚠️ Dikkat!","Ozon tabakası incelmeye başladı","Hız kesmeyin!"],
+  yuksek:["🔥 Rekor geliy or!","Atmosfer yangın yeri!","Dünya tehlikede!"],
+  cok:["💀 Apocalypse!","Ozon tabakası yok oldu!","Cehennem kapıları açıldı!"]
+};
+
+function updateMesaj(total){
+  const mesaj=document.getElementById("mesaj");
+  let liste;
+  
+  if(total===0)liste=mesajlar.basla;
+  else if(total<15)liste=mesajlar.dusuk;
+  else if(total<30)liste=mesajlar.orta;
+  else if(total<50)liste=mesajlar.yuksek;
+  else liste=mesajlar.cok;
+  
+  mesaj.innerText=liste[Math.floor(Math.random()*liste.length)];
+}
+
+/* 🔥 FİREBASE SYNC */
+let solVal=0,sagVal=0;
+
+db.ref().on("value",snapshot=>{
+  if(!snapshot.val())return;
+  
+  solVal=snapshot.val().sol||0;
+  sagVal=snapshot.val().sag||0;
+  
+  document.getElementById("sol").innerText=solVal;
+  document.getElementById("sag").innerText=sagVal;
+  
+  const total=solVal+sagVal;
+  updateOzon(total);
+  updateMesaj(total);
+  updateLeader(solVal,sagVal);
 });
 
-function arttirSol(){db.ref("sol").transaction(v=>(v||0)+1);spawnChaos(20)}
-function arttirSag(){db.ref("sag").transaction(v=>(v||0)+1);spawnChaos(20)}
-function resetSol(){db.ref("sol").set(0)}
-function resetSag(){db.ref("sag").set(0)}
+/* 🎮 OYUN FONKSİYONLARI */
+function arttirSol(){
+  db.ref("sol").transaction(v=>(v||0)+1);
+  playSes();
+  showGif("gifSol");
+  spawnChaos(25);
+}
 
-spawnChaos(20);
+function arttirSag(){
+  db.ref("sag").transaction(v=>(v||0)+1);
+  playSes();
+  showGif("gifSag");
+  spawnChaos(25);
+}
+
+function resetSol(){
+  if(confirm("Tanrıça'nın skorunu sıfırlamak istediğinden emin misin?")){
+    db.ref("sol").set(0);
+  }
+}
+
+function resetSag(){
+  if(confirm("Ayaklı Çernobil'in skorunu sıfırlamak istediğinden emin misin?")){
+    db.ref("sag").set(0);
+  }
+}
+
+/* 🎬 BAŞLANGIÇ */
+spawnChaos(25);
+updateMesaj(0);
+
+/* 🎹 KLAVYE KISAYOLLARI */
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("lock").style.display!=="none")return;
+  
+  if(e.key==="ArrowLeft"||e.key==="a"||e.key==="A"){
+    arttirSol();
+  }else if(e.key==="ArrowRight"||e.key==="d"||e.key==="D"){
+    arttirSag();
+  }
+});
 </script>
 
 </body>
