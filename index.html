@@ -3,17 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>💨 Osuruk Chaos
- Of 
- The Ozon Tabakası</title>
+<title>💨 Osuruk Chaos Of The Ozon Tabakası</title>
 
 <style>
 :root{--pink:#ff6ec7}
 
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
@@ -22,10 +17,61 @@ body{
   color:#fff;
   min-height:100vh;
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
   overflow:hidden;
+}
+
+/* 🔒 BLUR KATMANI */
+#lock{
+  position:fixed;
+  inset:0;
+  backdrop-filter:blur(14px);
+  background:rgba(0,0,0,.6);
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.lock-box{
+  background:rgba(255,255,255,.1);
+  padding:28px;
+  border-radius:24px;
+  text-align:center;
+  box-shadow:0 0 40px rgba(255,110,199,.6);
+}
+
+.lock-box h2{
+  margin:0 0 12px;
+  text-shadow:0 0 12px var(--pink);
+}
+
+.lock-box input{
+  width:100%;
+  padding:14px;
+  border-radius:30px;
+  border:none;
+  font-size:18px;
+  text-align:center;
+  margin-bottom:12px;
+}
+
+.lock-box button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:30px;
+  font-size:16px;
+  font-weight:800;
+  background:linear-gradient(45deg,#ff6ec7,#ffa6e7);
+  color:#2b0033;
+}
+
+.lock-error{
+  color:#ff9db5;
+  margin-top:8px;
+  min-height:20px;
 }
 
 /* 💨 DUMAN */
@@ -51,12 +97,11 @@ body::before{
 .particle{
   position:absolute;
   font-size:var(--size);
-  opacity:.95;
   animation:drift var(--time) linear infinite;
 }
 
 @keyframes drift{
-  from{transform:translate(var(--x1),var(--y1)) rotate(0deg)}
+  from{transform:translate(0,0) rotate(0deg)}
   to{transform:translate(var(--x2),var(--y2)) rotate(360deg)}
 }
 
@@ -74,16 +119,8 @@ h1{
   color:#ffb3c1;
   text-align:center;
   z-index:2;
-  animation:pulse 2s infinite;
 }
 
-@keyframes pulse{
-  0%{opacity:.7}
-  50%{opacity:1}
-  100%{opacity:.7}
-}
-
-/* 📱 ARENA */
 .arena{
   width:100%;
   max-width:360px;
@@ -95,7 +132,6 @@ h1{
 }
 
 .kart{
-  position:relative;
   background:rgba(255,255,255,.1);
   border-radius:22px;
   padding:18px;
@@ -104,14 +140,8 @@ h1{
   box-shadow:0 0 25px rgba(255,105,180,.35);
 }
 
-.kart h3{margin:0 0 6px}
+.sayac{font-size:34px;font-weight:900}
 
-.sayac{
-  font-size:34px;
-  font-weight:900;
-}
-
-/* BUTONLAR */
 button{
   width:100%;
   margin-top:10px;
@@ -124,7 +154,6 @@ button{
   color:#2b0033;
 }
 
-/* RESET */
 button.reset{
   margin-top:8px;
   padding:10px;
@@ -134,28 +163,15 @@ button.reset{
   border:1px solid rgba(255,255,255,.3);
 }
 
-/* PATLAMA */
 .gif{
   position:absolute;
   inset:0;
   display:none;
   align-items:center;
   justify-content:center;
-  pointer-events:none;
 }
 
 .gif img{width:150px}
-
-/* SHAKE */
-.shake{animation:shake .35s}
-
-@keyframes shake{
-  0%{transform:translate(0)}
-  25%{transform:translate(-10px,5px)}
-  50%{transform:translate(10px,-5px)}
-  75%{transform:translate(-8px,4px)}
-  100%{transform:translate(0)}
-}
 </style>
 
 <!-- 🔥 Firebase -->
@@ -175,16 +191,23 @@ const db=firebase.database();
 
 <body>
 
+<!-- 🔒 GİRİŞ -->
+<div id="lock">
+  <div class="lock-box">
+    <h2>🔐 Özel Alan</h2>
+    <input id="pass" type="password" placeholder="Şifre">
+    <button onclick="kontrol()">GİR</button>
+    <div class="lock-error" id="lockErr"></div>
+  </div>
+</div>
+
 <div id="particles"></div>
 
-<h1>💨 Osuruk Chaos
- Of 
- The Ozon Tabakası</h1>
+<h1>💨 Osuruk Chaos<br>Of<br>The Ozon Tabakası</h1>
 <div id="mesaj">Hazır mısınız?</div>
 
 <div class="arena" id="arena">
 
-  <!-- 👼 TANRIÇA -->
   <div class="kart">
     <h3>👼 Tanrıça</h3>
     💨 <span id="sol" class="sayac">0</span>
@@ -193,7 +216,6 @@ const db=firebase.database();
     <div class="gif" id="gifSol"><img src="https://i.gifer.com/6oK.gif"></div>
   </div>
 
-  <!-- ☢️ ÇERNOBİL -->
   <div class="kart">
     <h3>☢️ Ayaklı Çernobil</h3>
     💨 <span id="sag" class="sayac">0</span>
@@ -209,7 +231,16 @@ const db=firebase.database();
 </audio>
 
 <script>
-/* 🌌 KAOS EMOJİ */
+/* 🔐 ŞİFRE */
+function kontrol(){
+  if(document.getElementById("pass").value==="123"){
+    document.getElementById("lock").style.display="none";
+  }else{
+    document.getElementById("lockErr").innerText="❌ Yanlış şifre";
+  }
+}
+
+/* 🌌 KAOS */
 const emojis=["💨","💩","👼","⭐","😈"];
 const box=document.getElementById("particles");
 
@@ -222,56 +253,11 @@ function spawnChaos(n=15){
     p.style.top=Math.random()*100+"vh";
     p.style.setProperty("--size",18+Math.random()*22+"px");
     p.style.setProperty("--time",6+Math.random()*10+"s");
-    p.style.setProperty("--x1","0px");
-    p.style.setProperty("--y1","0px");
     p.style.setProperty("--x2",(Math.random()*200-100)+"vw");
     p.style.setProperty("--y2",(Math.random()*-200)+"vh");
     box.appendChild(p);
     setTimeout(()=>p.remove(),12000);
   }
-}
-
-/* OYUN */
-const mesajlar=[
-"💨 Gaz bulutu atmosferi terk etti",
-"💩 Kıyamet kokulu bir hamle",
-"😇 Melekler bile kaçıyor",
-"☢️ Radyasyon seviyesi kritik",
-"😂 Gülmekten nefes alamıyoruz",
-"🤢 Bir daha basmadan düşün",
-"💨 Sessiz ama ölümcül",
-"💩 Bu bilimsel olarak açıklanamaz",
-"😈 Karanlık güçler harekete geçti",
-"🚨 Acil durum! Pencere aç!",
-"😵 Beyin hücreleri hasar aldı",
-"💨 Rüzgar yön değiştirdi",
-"☠️ Doğal silah kullanıldı",
-"🧪 Kimyasal saldırı tespit edildi",
-"😂 Efsanevi bir osuruş",
-"💩 Yer çekimine meydan okudu",
-"😇 Melekler istifa etti",
-"🌪️ Mini kasırga oluştu",
-"💨 Kokusu 3 mahalle öteye gitti",
-"☢️ Çernobil gurur duyuyor",
-"😵 Bilim insanları çaresiz",
-"🤯 Gerçeklik bozuluyor",
-"💩 Ruhsal hasar verildi",
-"😂 Tarihe geçti",
-"💨 Atmosfer delindi"
-];
-
-function efekt(gifId){
-  document.getElementById(gifId).style.display="flex";
-  setTimeout(()=>document.getElementById(gifId).style.display="none",600);
-
-  osurukSes.currentTime=0;
-  osurukSes.play();
-
-  arena.classList.add("shake");
-  setTimeout(()=>arena.classList.remove("shake"),350);
-
-  spawnChaos(18);
-  mesaj.innerText=mesajlar[Math.floor(Math.random()*mesajlar.length)];
 }
 
 db.ref().on("value",s=>{
@@ -280,27 +266,11 @@ db.ref().on("value",s=>{
   sag.innerText=s.val().sag||0;
 });
 
-function arttirSol(){
-  db.ref("sol").transaction(v=>(v||0)+1);
-  efekt("gifSol");
-}
+function arttirSol(){db.ref("sol").transaction(v=>(v||0)+1);spawnChaos(20)}
+function arttirSag(){db.ref("sag").transaction(v=>(v||0)+1);spawnChaos(20)}
+function resetSol(){db.ref("sol").set(0)}
+function resetSag(){db.ref("sag").set(0)}
 
-function arttirSag(){
-  db.ref("sag").transaction(v=>(v||0)+1);
-  efekt("gifSag");
-}
-
-function resetSol(){
-  db.ref("sol").set(0);
-  mesaj.innerText="👼 Tanrıça arındı";
-}
-
-function resetSag(){
-  db.ref("sag").set(0);
-  mesaj.innerText="☢️ Alan temizlendi";
-}
-
-/* başlangıç kaosu */
 spawnChaos(20);
 </script>
 
